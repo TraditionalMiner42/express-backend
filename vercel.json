@@ -2,7 +2,7 @@
     "version": 2,
     "rewrites": [
       { "source": "/routes/protected/(.*)", "destination": "/app.js" },
-      { "source": "/routes/private/(.*)", "destination": "/app.js" },
+      { "source": "/routes/public/(.*)", "destination": "/app.js" },
       { "source": "/(.*)", "destination": "/app.js" }
     ],
     "builds": [
