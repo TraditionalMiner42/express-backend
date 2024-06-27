@@ -3,6 +3,7 @@ const pool = require("../../configs/DbConfig");
 const jwtValidate = require("../../middlewares/AccessValidation");
 const router = express.Router();
 
+// Get bookings based on the specific user
 router.get("/users/get_user_bookings", (req, res) => {
 	const userId = req.query.userId;
 
@@ -13,7 +14,9 @@ router.get("/users/get_user_bookings", (req, res) => {
 		FROM booking b
 		JOIN room r ON b.selected_room = r.room_id
         WHERE user_id = ?
-	`; // Adjust query as needed
+	`;
+
+	// Execute query
 	pool.query(getBookingsQuery, [userId], (err, results) => {
 		if (err) {
 			console.error("Error executing query:", err);

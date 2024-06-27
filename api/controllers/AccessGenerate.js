@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+// Generate JWT access token
 function generateAccessToken(username, userId) {
 	const accessToken = jwt.sign(
 		{ username, userId },

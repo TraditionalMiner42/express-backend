@@ -2,9 +2,9 @@
   "name": "your-app",
   "version": "1.0.0",
   "description": "Your Express application",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon ./api/index.js"
   },
   "dependencies": {
     "body-parser": "^1.20.2",

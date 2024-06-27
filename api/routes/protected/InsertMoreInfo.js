@@ -4,6 +4,7 @@ const jwtValidate = require("../../middlewares/AccessValidation");
 const moment = require("moment/moment");
 const router = express.Router();
 
+// Get meals and participants
 router.get("/users/get_break_details", jwtValidate, (req, res) => {
 	const getBreaksQuery = `
         SELECT * 
@@ -11,6 +12,8 @@ router.get("/users/get_break_details", jwtValidate, (req, res) => {
         JOIN booking b ON p.booking_id = b.booking_id
         ORDER BY p.booking_id
     `;
+
+	// Execute query
 	pool.query(getBreaksQuery, (err, result) => {
 		if (err) {
 			console.error("Error executing query:", err);
@@ -26,6 +29,7 @@ router.get("/users/get_break_details", jwtValidate, (req, res) => {
 	});
 });
 
+// Post meals and participants
 router.post("/users/add_more", jwtValidate, (req, res) => {
 	const { meal, bookingId } = req.body;
 	console.log("participants and beverages: ", meal);

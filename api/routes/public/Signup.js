@@ -31,8 +31,6 @@ router.post("/users/signup/check_username", (req, res) => {
 });
 
 router.post("/users/signup", (req, res) => {
-	console.log("testt");
-	console.log(req.body);
 	const { username, password } = req.body;
 	const sqlCheckQuery = `SELECT * FROM user WHERE username = ?`;
 	const sqlInsertQuery =

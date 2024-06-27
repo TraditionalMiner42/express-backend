@@ -1,10 +1,17 @@
 const express = require("express");
 const pool = require("../../configs/DbConfig");
+const jwtValidate = require("../../middlewares/AccessValidation");
 const router = express.Router();
 
-router.get("/users/get_users", (req, res) => {
-	const getUsersQuery = `SELECT * FROM user`;
-	pool.query(getUsersQuery, (err, results) => {
+// Get specific user based on the request
+router.get("/users/get_user", jwtValidate, (req, res) => {
+	const decodedUser = req.user;
+	const userId = decodedUser.userId;
+
+	const getUsersQuery = `SELECT * FROM user where user_id = ?`;
+
+	// Execute query
+	pool.query(getUsersQuery, [userId], (err, results) => {
 		if (err) {
 			console.error("Error executing query:", err);
 			return res.status(500).send({
@@ -15,7 +22,7 @@ router.get("/users/get_users", (req, res) => {
 		if (results.length !== 0) {
 			console.log(results);
 			return res.status(200).json({
-				users: results,
+				user: results,
 				message: "Retrived all users successfully",
 			});
 		}

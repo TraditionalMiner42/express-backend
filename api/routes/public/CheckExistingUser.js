@@ -2,6 +2,7 @@ const express = require("express");
 const pool = require("../../configs/DbConfig");
 const router = express.Router();
 
+// Check if the request user exists in db
 router.post("/users/check_existing_users", (req, res) => {
 	const { username } = req.body;
 	const sqlCheckQuery = `SELECT * FROM user WHERE username = ?`;

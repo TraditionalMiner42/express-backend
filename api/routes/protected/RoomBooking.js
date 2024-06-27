@@ -5,6 +5,7 @@ const pool = require("../../configs/DbConfig");
 const { decode } = require("jsonwebtoken");
 const router = express.Router();
 
+// Get room id from room name
 const getRoomId = (roomName) => {
 	return new Promise((resolve, reject) => {
 		const getRoomIdQuery = `SELECT room_id FROM room WHERE room_name = ?`;
@@ -15,11 +16,13 @@ const getRoomId = (roomName) => {
 			if (results.length === 0) {
 				return resolve(null);
 			}
+			// return room id
 			resolve(results[0].room_id);
 		});
 	});
 };
 
+// Check available room and time
 const checkAvailability = async (modifiedFormValues, roomId) => {
 	const sqlCheckQuery = ` 
         SELECT booking_date, selected_room, booking_start_time, booking_end_time
@@ -46,11 +49,14 @@ const checkAvailability = async (modifiedFormValues, roomId) => {
 				return reject(error);
 			}
 			console.log("results: ", results);
+
+			// return booked room and time slot
 			resolve(results.length !== 0);
 		});
 	});
 };
 
+// Insert new booking
 const insertBooking = async (modifiedFormValues, userId, roomId) => {
 	// const decoded = jwtDecode(userToken.token);
 	// const userId = decoded.userId;
@@ -79,48 +85,20 @@ const insertBooking = async (modifiedFormValues, userId, roomId) => {
 	});
 };
 
-// const insertParticipants = async (participants, bookingId) => {
-// 	const participantInsertQueries = participants.map((participantName) => {
-// 		return new Promise((resolve, reject) => {
-// 			const sqlParticipantInsertQuery = `
-//                 INSERT INTO participant (participant_name, booking_id)
-//                 VALUES (?, ?);
-//             `;
-// 			const participantInsertedValues = [
-// 				participantName.trim(),
-// 				bookingId,
-// 			];
-// 			pool.query(
-// 				sqlParticipantInsertQuery,
-// 				participantInsertedValues,
-// 				(error, results) => {
-// 					if (error) {
-// 						return reject(error);
-// 					}
-// 					resolve(results);
-// 				}
-// 			);
-// 		});
-// 	});
-
-// 	return Promise.all(participantInsertQueries);
-// };
-
+// Post request from booking submission
 router.post("/users/rooms", jwtValidate, async (req, res) => {
 	try {
 		const { modifiedFormValues } = req.body;
-		// console.log(userToken);
-		// const decoded = jwtDecode(userToken.token);
-
-		// console.log(decoded);
-
 		console.log(modifiedFormValues);
-		// console.log(req.user.userId);
 
-		const roomId = await getRoomId(modifiedFormValues.room);
+		// Get room id
+		const roomId = await getRoomId(modifiedFormValues.room); // Pass room name args
 		console.log("submitted room id: ", roomId);
 
+		// Check if the room's availability
 		const isBooked = await checkAvailability(modifiedFormValues, roomId);
+
+		// Check if isBooked has value
 		if (isBooked) {
 			return res.status(409).send({
 				success: false,
@@ -128,12 +106,8 @@ router.post("/users/rooms", jwtValidate, async (req, res) => {
 			});
 		}
 
+		// Insert new booking
 		await insertBooking(modifiedFormValues, req.user.userId, roomId);
-
-		// console.log(bookingId.userId);
-
-		// const participants = modifiedFormValues.participants.split(",");
-		// await insertParticipants(participants, req.user.userId);
 
 		console.log("Form data inserted successfully.");
 		res.send({
@@ -150,6 +124,7 @@ router.post("/users/rooms", jwtValidate, async (req, res) => {
 	}
 });
 
+// Get all rooms
 router.get("/users/get_rooms", (req, res) => {
 	const getRoomsQuery = `SELECT * FROM room`;
 	pool.query(getRoomsQuery, (err, results) => {

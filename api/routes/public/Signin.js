@@ -35,10 +35,12 @@ router.post("/users/signin/check_credential", (req, res) => {
 	});
 });
 
+// Post sign in
 router.post("/users/signin", (req, res) => {
 	// res.send("Signed in.");
 	const { username, password } = req.body;
 
+	// Execute query
 	pool.query(sqlCheckQuery, [username, password], (err, results) => {
 		if (err) {
 			console.error("Error executing query:", err);

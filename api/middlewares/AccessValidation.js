@@ -1,12 +1,15 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+// Middleware function to validate JWT token
 function jwtValidate(req, res, next) {
 	try {
+		// If there's no authorization header, return status 401
 		if (!req.headers["authorization"]) return res.sendStatus(401);
 
 		console.log("authorized header: ", req.headers["authorization"]);
 
+		// Replace "Bearer " from auth header
 		const token = req.headers["authorization"].replace("Bearer ", "");
 		console.log("token: ", token);
 		console.log("secret: ", process.env.TOKEN_SECRET);

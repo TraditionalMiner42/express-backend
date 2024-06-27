@@ -4,6 +4,7 @@ const jwtValidate = require("../../middlewares/AccessValidation");
 const moment = require("moment/moment");
 const router = express.Router();
 
+// Get all bookings
 router.get("/users/get_bookings", jwtValidate, (req, res) => {
 	const getBookingsQuery = `
 		SELECT b.*, r.* 
@@ -11,6 +12,8 @@ router.get("/users/get_bookings", jwtValidate, (req, res) => {
 		JOIN room r ON b.selected_room = r.room_id
 		ORDER BY b.booking_date, b.booking_start_time
 	`; // Adjust query as needed
+
+	// Execute query
 	pool.query(getBookingsQuery, (err, results) => {
 		if (err) {
 			console.error("Error executing query:", err);
