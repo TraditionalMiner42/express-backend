@@ -20,9 +20,14 @@ router.get("/users/get_user", jwtValidate, (req, res) => {
 			});
 		}
 		if (results.length !== 0) {
-			console.log(results);
+			const filteredResults = {
+				user_id: results[0].user_id,
+				username: results[0].username,
+				role: results[0].role,
+			};
+			console.log(results[0]);
 			return res.status(200).json({
-				user: results,
+				user: filteredResults,
 				message: "Retrived all users successfully",
 			});
 		}

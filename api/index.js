@@ -14,6 +14,7 @@ const SignupRoute = require("./routes/public/Signup");
 const GetUsersRoute = require("./routes/public/GetUsers");
 const GetBookingsRoute = require("./routes/protected/GetBookings");
 const InsertMoreInfo = require("./routes/protected/InsertMoreInfo");
+const DeleteBooking = require("./routes/protected/DeleteBooking");
 
 const GetUserRoute = require("./routes/protected/GetUser");
 const GetUserBookingsRoute = require("./routes/protected/GetUserBookings");
@@ -42,10 +43,11 @@ app.use(GetBookingsRoute);
 app.use(GetUserRoute);
 app.use(GetUserBookingsRoute);
 app.use(InsertMoreInfo);
+app.use(DeleteBooking);
 
 // Start the server
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
 
-module.exports = app;
+// module.exports = app;

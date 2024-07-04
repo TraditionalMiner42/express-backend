@@ -2,6 +2,7 @@ const express = require("express");
 const pool = require("../../configs/DbConfig");
 const jwtValidate = require("../../middlewares/AccessValidation");
 const moment = require("moment/moment");
+const queryPromise = require("../../utilities/QueryPromise");
 const router = express.Router();
 
 // Get meals and participants
@@ -38,18 +39,6 @@ router.post("/users/add_more", jwtValidate, (req, res) => {
         INSERT INTO participant (participant_name, booking_id, beverage)
         VALUES (?, ?, ?);
     `;
-
-	// Convert pool.query to return a promise
-	const queryPromise = (query, values) => {
-		return new Promise((resolve, reject) => {
-			pool.query(query, values, (error, result) => {
-				if (error) {
-					return reject(error);
-				}
-				resolve(result);
-			});
-		});
-	};
 
 	// Use async/await to handle the insertion sequentially
 	const insertParticipants = async () => {

@@ -16,6 +16,8 @@ router.post("/users/signup/check_username", (req, res) => {
 			});
 		}
 
+		console.log(results);
+
 		if (results.length > 0) {
 			// User already exists, return error
 			return res
