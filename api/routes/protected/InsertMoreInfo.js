@@ -32,17 +32,23 @@ router.get("/users/get_break_details", jwtValidate, (req, res) => {
 
 // Post meals and participants
 router.post("/users/add_more", jwtValidate, (req, res) => {
-	const { meal, bookingId } = req.body;
+	const { meal, bookingId, editedTopic } = req.body;
 	console.log("participants and beverages: ", meal);
 
 	const insertQuery = `
         INSERT INTO participant (participant_name, booking_id, beverage)
         VALUES (?, ?, ?);
     `;
+	const updateTopicQuery = `
+		UPDATE booking
+		SET topic = ?
+		WHERE booking_id = ?
+	`;
 
 	// Use async/await to handle the insertion sequentially
 	const insertParticipants = async () => {
 		try {
+			// Insert participants and drinks
 			for (const [index, mealItem] of meal.entries()) {
 				console.log(`meal ${index}: `, mealItem);
 				await queryPromise(insertQuery, [
@@ -52,6 +58,12 @@ router.post("/users/add_more", jwtValidate, (req, res) => {
 				]);
 				console.log("Participant and beverage inserted successfully.");
 			}
+			// Update topic
+			const updateResult = await queryPromise(updateTopicQuery, [
+				editedTopic,
+				bookingId,
+			]);
+			console.log("Topic updated successfully:", updateResult);
 			res.status(200).send({
 				success: true,
 				message: "Participants and beverages inserted successfully.",

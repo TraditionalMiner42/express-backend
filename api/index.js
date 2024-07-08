@@ -2,10 +2,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const mysql = require("mysql2");
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const fs = require("fs");
+const https = require("https");
+
 // const accessValidation = require("./middlewares/AccessValidation");
 const pool = require("./configs/DbConfig");
 const RoomRoute = require("./routes/protected/RoomBooking");
@@ -45,8 +44,15 @@ app.use(GetUserBookingsRoute);
 app.use(InsertMoreInfo);
 app.use(DeleteBooking);
 
+const sslOptions = {
+	key: fs.readFileSync(process.env.SSL_KEY_FILE),
+	cert: fs.readFileSync(process.env.SSL_CRT_FILE),
+};
+
+const server = https.createServer(sslOptions, app);
+
 // Start the server
-app.listen(port, () => {
+server.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
 
