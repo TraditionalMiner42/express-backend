@@ -86,7 +86,7 @@ const insertBooking = async (modifiedFormValues, userId, roomId) => {
 };
 
 // Post request from booking submission
-router.post("/users/rooms", jwtValidate, async (req, res) => {
+router.post("/", jwtValidate, async (req, res) => {
 	try {
 		const { modifiedFormValues } = req.body;
 		console.log(modifiedFormValues);
