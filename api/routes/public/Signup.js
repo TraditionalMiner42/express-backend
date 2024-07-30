@@ -1,5 +1,6 @@
 const express = require("express");
 const pool = require("../../configs/DbConfig");
+const bcrypt = require("bcrypt");
 const router = express.Router();
 
 // Endpoint to check if username exists
@@ -32,12 +33,18 @@ router.post("/users/signup/check_username", (req, res) => {
 	});
 });
 
-router.post("/users/signup", (req, res) => {
+router.post("/users/signup", async (req, res) => {
 	const { username, password } = req.body;
 	const sqlCheckQuery = `SELECT * FROM user WHERE username = ?`;
+
+	// Hash the password
+	const salt = await bcrypt.genSalt(10);
+	const hashedPassword = await bcrypt.hash(password, salt);
+	console.log("hashed pw: ", hashedPassword);
+
 	const sqlInsertQuery =
 		"INSERT INTO user (username, password, email, name, role) VALUES (?,?,DEFAULT,DEFAULT,?)";
-	const insertedValues = [username, password, 1];
+	const insertedValues = [username, hashedPassword, 1];
 	console.log(username);
 	console.log(password);
 
