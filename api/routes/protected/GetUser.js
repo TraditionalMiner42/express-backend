@@ -34,4 +34,6 @@ router.get("/users/get_user", jwtValidate, (req, res) => {
 	});
 });
 
+router.get("/users/booking_users", jwtValidate, (req, res) => {});
+
 module.exports = router;

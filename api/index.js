@@ -15,6 +15,9 @@ const DeleteBooking = require("./routes/protected/DeleteBooking");
 const GetUserRoute = require("./routes/protected/GetUser");
 const GetUserBookingsRoute = require("./routes/protected/GetUserBookings");
 
+const GetSectionDivision = require("./routes/public/GetSectionDivision");
+const GetUsers = require("./routes/public/GetUsers");
+
 require("dotenv").config();
 
 // Set the port number
@@ -28,6 +31,8 @@ app.use(cors());
 // Use body-parser middleware to parse JSON data
 app.use(express.json());
 
+app.use(GetUsers);
+app.use(GetSectionDivision);
 app.use(SigninRoute);
 app.use(SignupRoute);
 app.use(RoomRoute);

@@ -7,9 +7,10 @@ const router = express.Router();
 // Get all bookings
 router.get("/users/get_bookings", jwtValidate, (req, res) => {
 	const getBookingsQuery = `
-		SELECT b.*, r.* 
+		SELECT b.*, r.*, u.name 
 		FROM booking b
 		JOIN room r ON b.selected_room = r.room_id
+		JOIN user u ON b.user_id = u.user_id
 		ORDER BY b.booking_date, b.booking_start_time
 	`; // Adjust query as needed
 
