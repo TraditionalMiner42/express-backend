@@ -31,7 +31,7 @@ router.get("/users/get_break_details", jwtValidate, (req, res) => {
 });
 
 // Post meals and participants
-router.post("/users/add_more", jwtValidate, (req, res) => {
+router.post("/users/add_break_meals", jwtValidate, (req, res) => {
 	const { meal, bookingId, editedTopic } = req.body;
 	console.log("participants and beverages: ", meal);
 
@@ -39,11 +39,11 @@ router.post("/users/add_more", jwtValidate, (req, res) => {
         INSERT INTO participant (participant_name, booking_id, beverage)
         VALUES (?, ?, ?);
     `;
-	const updateTopicQuery = `
-		UPDATE booking
-		SET topic = ?
-		WHERE booking_id = ?
-	`;
+	// const updateTopicQuery = `
+	// 	UPDATE booking
+	// 	SET topic = ?
+	// 	WHERE booking_id = ?
+	// `;
 
 	// Use async/await to handle the insertion sequentially
 	const insertParticipants = async () => {
@@ -58,12 +58,12 @@ router.post("/users/add_more", jwtValidate, (req, res) => {
 				]);
 				console.log("Participant and beverage inserted successfully.");
 			}
-			// Update topic
-			const updateResult = await queryPromise(updateTopicQuery, [
-				editedTopic,
-				bookingId,
-			]);
-			console.log("Topic updated successfully:", updateResult);
+			// // Update topic
+			// const updateResult = await queryPromise(updateTopicQuery, [
+			// 	editedTopic,
+			// 	bookingId,
+			// ]);
+			// console.log("Topic updated successfully:", updateResult);
 			res.status(200).send({
 				success: true,
 				message: "Participants and beverages inserted successfully.",
@@ -78,6 +78,34 @@ router.post("/users/add_more", jwtValidate, (req, res) => {
 	};
 
 	insertParticipants();
+});
+
+// Post updated booking topic
+router.post("/users/rename_topic", jwtValidate, async (req, res) => {
+	const { editedTopic, bookingId } = req.body;
+	const updateTopicQuery = `
+		UPDATE booking
+		SET topic = ?
+		WHERE booking_id = ?
+	`;
+	if (!editedTopic || !bookingId) {
+		return res
+			.status(400)
+			.json({ success: false, message: "Missing required fields" });
+	}
+	try {
+		await queryPromise(updateTopicQuery, [editedTopic, bookingId]);
+		res.status(200).json({
+			success: true,
+			message: "Topic updated successfully",
+		});
+	} catch (error) {
+		console.error("Error updating topic:", error);
+		res.status(500).json({
+			success: false,
+			message: "Internal server error",
+		});
+	}
 });
 
 module.exports = router;
