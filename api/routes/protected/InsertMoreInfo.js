@@ -8,10 +8,11 @@ const router = express.Router();
 // Get meals and participants
 router.get("/users/get_break_details", jwtValidate, (req, res) => {
 	const getBreaksQuery = `
-        SELECT * 
-        FROM participant p
-        JOIN booking b ON p.booking_id = b.booking_id
-        ORDER BY p.booking_id
+		SELECT p.*, b.*, r.*
+		FROM booking b
+		LEFT JOIN participant p ON p.booking_id = b.booking_id
+		LEFT JOIN room r ON r.room_id = b.selected_room
+		ORDER BY b.booking_id;
     `;
 
 	// Execute query
