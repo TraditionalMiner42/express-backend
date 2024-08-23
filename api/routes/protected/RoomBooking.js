@@ -62,8 +62,8 @@ const insertBooking = async (modifiedFormValues, userId, roomId) => {
 	// const userId = decoded.userId;
 	// console.log(decoded.userId);
 	const sqlInsertQuery = `
-        INSERT INTO booking (topic, booking_date, booking_start_time, booking_end_time, selected_room, user_id, booking_status) 
-        VALUES (?,?,?,?,?,?,?);
+        INSERT INTO booking (topic, booking_date, booking_start_time, booking_end_time, selected_room, user_id, booking_status, shop_id) 
+        VALUES (?,?,?,?,?,?,?,?);
     `;
 	const insertedValues = [
 		modifiedFormValues.meetingTopic,
@@ -73,6 +73,7 @@ const insertBooking = async (modifiedFormValues, userId, roomId) => {
 		roomId,
 		userId,
 		1,
+		modifiedFormValues.shop,
 	];
 
 	return new Promise((resolve, reject) => {
@@ -89,7 +90,6 @@ const insertBooking = async (modifiedFormValues, userId, roomId) => {
 router.post("/", jwtValidate, async (req, res) => {
 	try {
 		const { modifiedFormValues } = req.body;
-		console.log(modifiedFormValues);
 
 		// Get room id
 		const roomId = await getRoomId(modifiedFormValues.room); // Pass room name args

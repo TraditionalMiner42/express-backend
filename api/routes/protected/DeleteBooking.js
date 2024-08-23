@@ -16,11 +16,11 @@ router.delete(
 		//     JOIN participant ON booking.booking_id = participant.booking_id
 		//     WHERE booking.booking_id = ?;
 		// `;
-		const deleteParticipantsQuery =
-			"DELETE FROM participant WHERE booking_id = ?";
+		// const deleteParticipantsQuery =
+		// 	"DELETE FROM participant WHERE booking_id = ?";
 		const deleteBookingQuery = "DELETE FROM booking WHERE booking_id = ?";
 		try {
-			await queryPromise(deleteParticipantsQuery, [bookingId]);
+			// await queryPromise(deleteParticipantsQuery, [bookingId]);
 			await queryPromise(deleteBookingQuery, [bookingId]);
 
 			console.log(

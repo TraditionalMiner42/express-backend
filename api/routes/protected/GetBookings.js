@@ -7,10 +7,11 @@ const router = express.Router();
 // Get all bookings
 router.get("/users/get_bookings", jwtValidate, (req, res) => {
 	const getBookingsQuery = `
-		SELECT b.*, r.*, u.name 
+		SELECT b.*, r.*, u.name, s.*
 		FROM booking b
 		JOIN room r ON b.selected_room = r.room_id
 		JOIN user u ON b.user_id = u.user_id
+		LEFT JOIN shop s ON b.shop_id = s.shop_id
 		ORDER BY b.booking_date, b.booking_start_time
 	`; // Adjust query as needed
 
@@ -45,12 +46,6 @@ router.get("/users/get_bookings", jwtValidate, (req, res) => {
 			processedBookings.push(booking);
 		});
 
-		console.log(
-			`Processed bookings [${processedBookings.length}]: `,
-			processedBookings
-		);
-
-		console.log(results);
 		return res.status(200).json({
 			bookings: processedBookings,
 			message: "Retrieved all bookings successfully",

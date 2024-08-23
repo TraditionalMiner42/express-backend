@@ -8,10 +8,11 @@ const router = express.Router();
 // Get meals and participants
 router.get("/users/get_break_details", jwtValidate, (req, res) => {
 	const getBreaksQuery = `
-		SELECT p.*, b.*, r.*
+		SELECT p.*, b.*, r.*, s.*
 		FROM booking b
 		LEFT JOIN participant p ON p.booking_id = b.booking_id
 		LEFT JOIN room r ON r.room_id = b.selected_room
+		LEFT JOIN shop s ON s.shop_id = b.shop_id
 		ORDER BY b.booking_id;
     `;
 
@@ -33,12 +34,13 @@ router.get("/users/get_break_details", jwtValidate, (req, res) => {
 
 // Post meals and participants
 router.post("/users/add_break_meals", jwtValidate, (req, res) => {
-	const { meal, bookingId, editedTopic } = req.body;
+	const { meal, bookingId } = req.body;
 	console.log("participants and beverages: ", meal);
+	console.log(meal);
 
 	const insertQuery = `
-        INSERT INTO participant (participant_name, booking_id, beverage)
-        VALUES (?, ?, ?);
+        INSERT INTO participant (participant_name, booking_id, beverage, remark)
+        VALUES (?, ?, ?, ?);
     `;
 	// const updateTopicQuery = `
 	// 	UPDATE booking
@@ -56,6 +58,7 @@ router.post("/users/add_break_meals", jwtValidate, (req, res) => {
 					mealItem.name,
 					bookingId,
 					mealItem.drink,
+					mealItem.remark,
 				]);
 				console.log("Participant and beverage inserted successfully.");
 			}
